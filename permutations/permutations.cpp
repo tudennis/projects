@@ -8,6 +8,7 @@ For example,
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include <algorithm>
 
 /*
@@ -26,6 +27,46 @@ For example,
  [1, 2, 3]
  */
 
+/*********************************With Duplication********************************/
+void addNextWithDuplication(const std::vector<int>& v, int value, std::set< std::vector<int> >& results)
+{
+	int count = v.size();
+
+	for (int pos = 0; pos < count + 1; ++pos)	// For each position in the previous permutation
+	{
+		std::vector<int> tmp = v;
+		tmp.insert(tmp.begin() + pos, value);
+		results.insert(tmp);
+	}
+}
+
+void permutationWithDuplicate(int* a, int size, std::set< std::vector<int> >& results)
+{
+	if (size == 0)
+		return;
+
+	std::vector<int> tmp;
+	tmp.push_back(a[0]);
+	results.insert(tmp);
+
+	std::set< std::vector<int> > newResults;
+
+	for (int pos = 1; pos < size; ++pos)				// For every number
+	{
+		std::set< std::vector<int> > newResults;
+
+		std::set< std::vector<int> >::const_iterator itr = results.begin();
+		while (itr != results.end())
+		{
+			addNextWithDuplication(*itr, a[pos], newResults);
+			++ itr;
+		}
+
+		results = newResults;
+	}
+}
+
+/*********************************Without Duplication********************************/
 void addNext(const std::vector<int>& v, int value, std::vector< std::vector<int> >& results)
 {
 	int count = v.size();
@@ -78,11 +119,13 @@ void print1(const std::vector<int>& v)
 
 int main(int argc, char ** argv)
 {
-	int a[] = {1, 2, 3};
+	int a[] = {1, 2, 3, 3};
 
-	std::vector< std::vector<int> > results;
+	// std::vector< std::vector<int> > results;
+	// permutate(a, sizeof(a)/sizeof(int), results);
 
-	permutate(a, sizeof(a)/sizeof(int), results);
+	std::set< std::vector<int> > results;
+	permutationWithDuplicate(a, sizeof(a)/sizeof(int), results);
 
 	std::for_each(results.begin(), results.end(), print1);
 
