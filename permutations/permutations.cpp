@@ -10,8 +10,58 @@ For example,
 #include <vector>
 #include <algorithm>
 
+/*
+ The idea is as following:
+ Starting from one element from the first position
+ [1]
+ Then insert the number from the second position to all the possible locations from the previous results
+ [2, 1]
+ [1, 2]
+ Repeat the step till the number at the last position
+ [3, 2, 1]
+ [2, 3, 1]
+ [2, 1, 3]
+ [3, 1, 2]
+ [1, 3, 2]
+ [1, 2, 3]
+ */
+
+void addNext(const std::vector<int>& v, int value, std::vector< std::vector<int> >& results)
+{
+	int count = v.size();
+
+	for (int pos = 0; pos < count + 1; ++pos)	// For each position in the previous permutation
+	{
+		std::vector<int> tmp = v;
+		tmp.insert(tmp.begin() + pos, value);
+		results.push_back(tmp);
+	}
+}
+
+
 void permutate(int* a, int size, std::vector< std::vector<int> >& results)
 {
+	if (size == 0)
+		return;
+
+	std::vector<int> tmp;
+	tmp.push_back(a[0]);
+	results.push_back(tmp);
+
+	std::vector< std::vector<int> > newResults;
+
+	for (int pos = 1; pos < size; ++pos)				// For every number
+	{
+		std::vector< std::vector<int> > newResults;
+
+		int currentResultCount = results.size();
+		for (int i = 0; i < currentResultCount; ++i)	// For every existing permutation prior add the number
+		{
+			addNext(results[i], a[pos], newResults);
+		}
+
+		results = newResults;
+	}
 
 }
 
