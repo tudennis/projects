@@ -69,7 +69,7 @@ void nextPermutation(std::vector<int>& nums)
 		}
 	}
 
-	// 2. From forwards, find the first number nums[j] >= nums[i-1]
+	// 2. From backwards, find the first number nums[j] >= nums[i-1]
 	size_t j = s - 1;
 	for (; j > i - 1; --j)
 	{
