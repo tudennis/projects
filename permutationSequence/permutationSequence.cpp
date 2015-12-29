@@ -80,6 +80,38 @@ vector<int> kthPermutation(vector<int>& input, int kth)
 	return result;
 }
 
+vector<int> kthPermutationOptimum(vector<int>& input, int kth)
+{
+	vector<int> result;
+
+	int size = input.size();
+	int total = 1;
+	for (int i = 0; i < size; ++ i)
+	{
+		total *= input[i];
+	}
+
+	if (total < kth)
+	{
+		// Error handling
+		return result;
+	}
+
+	for (int i = 0; i < size; ++ i)
+	{
+		total /= (size - i);
+
+		int index = (kth - 1) / total;		// Index starts from 0 but the permutation starts from 1.
+
+		result.push_back(input[index]);
+		input.erase(input.begin() + index); // !!!!
+
+		kth -= total * index;				// Remove corresponding number portion
+	}
+
+	return result;
+}
+
 int main(int argc, char ** argv)
 {
 	vector<int> input;
@@ -89,7 +121,8 @@ int main(int argc, char ** argv)
 
 	int kth = 4;
 
-	vector<int> result = kthPermutation(input, kth);
+	// vector<int> result = kthPermutation(input, kth);
+	vector<int> result = kthPermutationOptimum(input, kth);
 
 	for_each(result.begin(), result.end(), print);
 	cout << endl;
