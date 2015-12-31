@@ -42,13 +42,13 @@ int largestRectangle(vector<int>& histogram)
 	int size = histogram.size();
 
 	vector<int> s;
-	s.push_back(0);	// Init stack
+	histogram.push_back(0);	// Flag to force poping out all items in stack
 
 	int result(0);
 
 	for (int i = 0; i < size; ++ i)
 	{
-		if (s.size() <= 0 || histogram[i] > histogram[s.back()])
+		if (s.size() == 0 || histogram[i] >= histogram[s.back()])
 		{
 			s.push_back(i);			// The index
 		}
