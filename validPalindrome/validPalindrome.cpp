@@ -18,7 +18,7 @@ using namespace std;
 
 bool validChar(char c)
 {
-	return (c >= 'A' && c <='z');
+	return (c >= 'A' && c <='Z') || (c >= 'a' && c <='z');
 }
 
 bool equalChar(char c1, char c2)
