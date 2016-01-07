@@ -39,28 +39,36 @@ void printMatrix(const vector< vector<T> >& matrix)
 	cout << endl;
 }
 
-int minimumPathSumHelper(vector< vector<int> >& input, int row, int col, vector<int>& result)
+// Non-constant space
+void minimumPathSumHelper(vector< vector<int> >& input, int row, int col, int& sum, vector<int>& result)
 {
-	vector<int>& r = input[row];
 	if (row == input.size() - 1)
 	{
-		return min(r[col], r[col + 1]);
+		sum = input[row][col];
+		result.push_back(input[row][col]);
+		return;
 	}
 
-	int left = minimumPathSumHelper(input, row + 1, col, result);
-	int right = minimumPathSumHelper(input, row + 1, col + 1, result);
+	int leftSum(0), rightSum(0);
+	vector<int> leftResult, rightResult;
 
-	if (left <= right)
+	minimumPathSumHelper(input, row + 1, col, leftSum, leftResult);
+	minimumPathSumHelper(input, row + 1, col + 1, rightSum, rightResult);
+
+	if (leftSum >= rightSum)
 	{
-		result.push_back(input[row + 1][col]);
-		return left + input[row][col];
+		sum = input[row][col] + rightSum;
+		result = rightResult;
 	}
 	else
 	{
-		result.push_back(input[row + 1][col + 1]);
-		return right + input[row][col];
+		sum = input[row][col] + leftSum;
+		result = leftResult;
 	}
+	result.insert(result.begin(), input[row][col]);
 }
+
+// Constant space?
 
 vector<int> minimumPathSum(vector< vector<int> >& input)
 {
@@ -70,8 +78,8 @@ vector<int> minimumPathSum(vector< vector<int> >& input)
 		return result;
 	}
 
-	result.push_back(input[0][0]);
-	int sum = minimumPathSumHelper(input, 1, 0, result);
+	int sum(0);
+	minimumPathSumHelper(input, 0, 0, sum, result);
 
 	cout << "Minimum path sum: " << sum << endl;
 
